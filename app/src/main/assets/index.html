@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-theme">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Wallpaper</title>
+<style>
+:root{
+  --ink:#000000;
+  --panel:rgba(0, 0, 0, 0.45);
+  --field:rgba(0, 0, 0, 0.3);
+  --hair:transparent;
+  --text:#ffffff;
+  --dim:rgba(255, 255, 255, 0.6);
+  --accent:#ffffff;
+  --ok:#ffffff;
+  --neu-flat:none;
+  --neu-pressed:none;
+  --neu-subtle:none;
+  --glass-bg:rgba(0, 0, 0, 0.3);
+  --glass-border:transparent;
+  --glass-blur:none;
+  --veil:rgba(0,0,0,0.50);
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+::selection{background:var(--accent);color:var(--ink);}
+html{background:var(--ink);}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(var(--veil),var(--veil)),url('wallpaper.jpg') center/cover no-repeat;}
+html,body{min-height:100%;color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+body{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0;margin:0;overflow:hidden;width:100vw;height:100dvh;}
+.stage{display:flex;flex-direction:column;align-items:center;width:100%;height:100%;}
+.phone{width:100%;height:100%;background:transparent;position:relative;}
+.screen{background:transparent;overflow:hidden;height:100%;width:100%;display:flex;flex-direction:column;position:relative;padding-top:0;}
+.settings{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:4px 20px 24px;background:transparent;gap:12px;overflow-y:auto;}
+.field-wrap{width:100%;}
+.field-wrap label{display:block;font-size:10px;color:var(--dim);margin-bottom:4px;font-weight:600;}
+input[type=text],select,button{-webkit-appearance:none;appearance:none;}
+input[type=text]{width:100%;height:38px;background:var(--field);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:none;border-radius:12px;color:var(--text);padding:0 14px;font-size:11px;outline:none !important;box-shadow:none !important;caret-color:var(--accent);}
+input[type=text]::placeholder{color:var(--dim);}
+input[type=text]:focus{border:none;}
+.btn{width:100%;height:34px;border-radius:11px;border:none;cursor:pointer;font-size:10px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:6px;outline:none !important;background:var(--field);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:var(--text);box-shadow:none;}
+.btn-white{background:var(--field);}
+.btn:active{opacity:.8;}
+.btn-apply{background:var(--text) !important;color:var(--ink) !important;border:none !important;box-shadow:none !important;}
+.btn-apply:active{opacity:.9;}
+.btn-apply:disabled{background:var(--field) !important;color:var(--dim) !important;border:none !important;box-shadow:none !important;cursor:not-allowed;opacity:.5;}
+.toggle-wrap{display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px;background:var(--field);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:none;border-radius:14px;box-shadow:none;}
+.toggle-label{font-size:10px;color:var(--text);font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+.toggle{position:relative;width:38px;height:20px;background:var(--field);border-radius:12px;border:none;cursor:pointer;box-shadow:none;}
+.toggle::after{content:'';position:absolute;inset:0;margin:auto 0 auto 2px;width:14px;height:14px;border-radius:50%;background:var(--dim);}
+.toggle.active{background:var(--text);border:none;}
+.toggle.active::after{transform:translateX(18px);background:var(--ink);}
+.toggle::before{content:'';display:block;width:100%;height:100%;}
+.segment-control{display:flex;width:100%;background:var(--field);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:12px;padding:3px;gap:4px;box-shadow:none;border:none;}
+.seg-btn{flex:1;background:transparent;border:none;color:var(--text);height:30px;border-radius:9px;font-size:10px;font-weight:700;cursor:pointer;text-transform:uppercase;}
+.seg-btn.active{background:var(--text);color:var(--ink);box-shadow:none;border:none;}
+.status-row{font-size:11px;color:var(--dim);text-align:center;min-height:20px;line-height:20px;margin-top:2px;font-weight:600;}
+.status-row.ok{color:var(--ok);}
+.history-item{aspect-ratio:9/16;background:var(--field);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:12px;overflow:hidden;position:relative;cursor:pointer;box-shadow:none;border:none;}
+.history-item:active{opacity:.9;}
+.history-item video{width:100%;height:100%;pointer-events:none;object-fit:cover;border:none;}
+.history-item iframe{width:400%;height:400%;transform:scale(.25);transform-origin:top left;pointer-events:none;border:none;}
+.history-type{position:absolute;bottom:4px;left:4px;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);color:#ffffff;font-size:8px;padding:2px 5px;border-radius:5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+#themeBtn,#configBtn{background:transparent;box-shadow:none;border:none;color:var(--text);display:flex;align-items:center;justify-content:center;}
+#themeBtn:active,#configBtn:active{opacity:.8;}
+#miniBox{box-shadow:none !important;border:none;}
+.card-group{display:flex;flex-direction:column;gap:10px;width:100%;}
+.control-row{display:flex;gap:10px;width:100%;max-width:360px;margin:0 auto;justify-content:center;align-items:center;}
+</style>
+</head>
+<body>
+<div class="stage"><div style="width:100%;height:100%;"><div class="phone"><div class="screen">
+
+<!-- MAIN -->
+<div class="settings" id="mainSettings" style="padding-top:8px;">
+  <div style="width:100%;display:flex;justify-content:flex-end;align-items:center;margin-bottom:4px;z-index:10;padding:4px 8px;gap:16px;">
+        <svg id="configBtn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;cursor:pointer;color:var(--text);"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </div>
+
+  <div id="miniWrap" style="position:relative;width:100%;flex:none;height:52vh;margin:0 auto 14px;max-width:336px;align-self:center;">
+      <div style="position:absolute;inset:-8px;background:var(--field);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:36px;z-index:0;"></div>
+      <div id="miniBox" style="width:100%;height:100%;background:#000000 url('wallpaper.jpg') center/cover no-repeat;border-radius:28px;overflow:hidden;position:absolute;inset:0;z-index:1;">
+              <iframe id="miniFrame" style="width:100%;height:100%;border:none;display:none;position:absolute;top:0;left:0;transform-origin:top left;" sandbox="allow-scripts allow-same-origin"></iframe>
+              <video id="miniVideo" style="width:100%;height:100%;object-fit:cover;display:none;position:absolute;top:0;left:0;" autoplay loop muted playsinline></video>
+              <span id="miniLabel" style="color:#ffffff;background:rgba(0,0,0,0.45);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:18px;border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:1;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></span>
+                      <div id="miniWebWarning" style="display:none;position:absolute;top:20px;left:16px;right:16px;background:rgba(0,0,0,0.65);color:#fff;font-size:9px;font-weight:600;padding:8px 12px;border-radius:10px;text-align:center;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:3;line-height:1.4;">Live preview may be blocked by the website owner, but it will still apply successfully.</div>
+                              </div>
+                            </div>
+
+                        <div style="width:100%;max-width:336px;margin:-4px auto 12px;display:flex;justify-content:flex-end;">
+                          <button type="button" id="muteBtn" style="display:none;background:transparent;color:#ffffff;border:none;cursor:pointer;padding:4px 8px;align-items:center;justify-content:center;">
+                            <svg id="muteIcon" viewBox="0 0 24 24" style="width:22px;height:22px;fill:currentColor;"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+                          </button>
+                        </div>
+
+                        <div class="control-row">
+    <button class="btn btn-white" id="historyBtn" style="width:36px;height:36px;border-radius:11px;flex:none;" title="History"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></button>
+    <div class="segment-control" style="flex:1;height:36px;">
+      <button class="seg-btn active" id="btnTypeWeb">Web</button>
+      <button class="seg-btn" id="btnTypeVideo">Video</button>
+      <button class="seg-btn" id="btnTypeHtml">HTML</button>
+    </div>
+    <div style="position:relative;display:flex;">
+      <button class="btn btn-white" id="zoomBtn" style="width:36px;height:36px;border-radius:11px;flex:none;" title="Zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg></button>
+      <div id="zoomPopup" style="display:none;position:absolute;bottom:115%;left:50%;transform:translateX(-50%);background:var(--panel);padding:8px;border-radius:12px;box-shadow:0 10px 20px rgba(0,0,0,.5),inset 0 0 0 1px var(--hair);z-index:20;flex-direction:column;gap:8px;align-items:center;">
+        <div style="display:flex;width:100px;align-items:center;justify-content:center;height:22px;"><input type="range" id="zoomSlider" min="0.25" max="1.25" step="0.05" value="1" style="width:100%;height:4px;background:var(--dim);border-radius:2px;outline:none;-webkit-appearance:none;appearance:none;accent-color:var(--text);"></div>
+        <div style="display:flex;align-items:center;background:var(--field);border-radius:8px;padding:2px 8px;"><input type="text" inputmode="decimal" id="zoomInput" value="1" style="width:28px;height:20px;background:transparent !important;border:none;color:var(--text);font-size:10px;font-weight:700;text-align:center;outline:none !important;box-shadow:none !important;padding:0;"><span style="color:var(--dim);font-size:9px;font-weight:700;">x</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field-wrap" id="urlWrap" style="height:40px;display:flex;align-items:center;position:relative;max-width:360px;margin:6px auto 0;">
+    <input type="text" id="urlInput" autocomplete="off" spellcheck="false" placeholder="https://example.com" style="height:40px;line-height:40px;padding:0 32px 0 14px;width:100%;border-radius:13px;background:var(--field);font-size:11px;font-weight:600;border:none;outline:none;">
+    <button type="button" id="urlGoBtn" style="display:none;position:absolute;right:4px;top:50%;transform:translateY(-50%);width:24px;height:24px;padding:0;border:none;background:transparent;color:var(--dim);cursor:pointer;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
+  </div>
+
+  <div id="fileWrap" style="display:none;text-align:center;padding:0;height:40px;width:100%;max-width:360px;margin:6px auto 0;">
+    <label style="cursor:pointer;color:var(--text);font-size:11px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;text-transform:uppercase;letter-spacing:.02em;background:var(--field);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:0 16px;height:40px;width:100%;border-radius:13px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;color:var(--accent);"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+      <span id="fileNameDisplay" style="overflow:hidden;text-overflow:ellipsis;max-width:200px;white-space:nowrap;color:var(--text);line-height:1;">Upload Video</span>
+      <input type="file" id="fileInput" accept="video/*" style="display:none;">
+    </label>
+  </div>
+
+  <div style="position:relative;width:100%;max-width:360px;margin:10px auto 0;padding-bottom:12px;">
+    <button class="btn btn-apply" id="applyBtn" style="background:var(--accent);color:var(--panel);width:100%;display:flex;justify-content:center;align-items:center;padding:0 16px;margin:0 auto;height:44px;border-radius:13px;font-size:12px;box-shadow:0 6px 16px rgba(0,0,0,.15);">Apply</button>
+    <div id="applyPopup" style="display:none;position:absolute;bottom:115%;left:50%;transform:translateX(-50%);width:auto;min-width:140px;background:var(--ink);padding:8px;border-radius:12px;flex-direction:column;gap:4px;box-shadow:0 10px 20px rgba(0,0,0,.5);z-index:20;">
+      <button class="btn apply-opt" style="background:var(--field);" data-val="Home Screen">Home Screen</button>
+      <button class="btn apply-opt" style="background:var(--field);" data-val="Lock Screen">Lock Screen</button>
+      <button class="btn apply-opt" style="background:var(--field);" data-val="Both">Home &amp; Lock Screens</button>
+    </div>
+  </div>
+  <div class="status-row" id="statusRow"></div>
+</div>
+
+<!-- CONFIG -->
+<div id="configView" style="display:none;flex-direction:column;background:transparent;height:100%;padding:16px;overflow-y:auto;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-top:4px;">
+      <button id="configBackBtn" style="background:transparent;border:none;color:var(--text);font-size:12px;cursor:pointer;font-weight:700;display:flex;align-items:center;gap:4px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back</button>
+    </div>
+  <div style="display:flex;flex-direction:column;background:rgba(0, 0, 0, 0.3);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:16px;padding:16px;gap:4px;">
+          <div style="font-size:9px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding-bottom:6px;">Playback</div>
+          <div style="display:flex;gap:8px;width:100%;margin-bottom:10px;">
+            <div class="field-wrap" style="flex:1;position:relative;">
+              <label style="color:var(--text);font-size:9px;font-weight:700;text-transform:uppercase;">Framerate</label>
+              <button type="button" id="fpsSelectBtn" class="btn" style="justify-content:space-between;padding:0 10px;font-weight:500;text-transform:none;font-size:10px;background:rgba(0, 0, 0, 0.2);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;"><span id="fpsSelectLabel">Default</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex:none;"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+              <div id="fpsOptList" style="display:none;position:absolute;top:100%;left:0;width:100%;margin-top:4px;background:rgba(0, 0, 0, 0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:12px;box-shadow:0 10px 20px rgba(0,0,0,.5);z-index:25;overflow:hidden;flex-direction:column;">
+                <button type="button" class="fps-opt" data-val="Default" style="width:100%;text-align:left;padding:8px 10px;font-size:10px;background:transparent;border:none;color:var(--text);cursor:pointer;">Default</button>
+                <button type="button" class="fps-opt" data-val="60 FPS" style="width:100%;text-align:left;padding:8px 10px;font-size:10px;background:transparent;border:none;color:var(--text);cursor:pointer;">60 FPS</button>
+                <button type="button" class="fps-opt" data-val="30 FPS" style="width:100%;text-align:left;padding:8px 10px;font-size:10px;background:transparent;border:none;color:var(--text);cursor:pointer;">30 FPS</button>
+                <button type="button" class="fps-opt" data-val="Uncapped" style="width:100%;text-align:left;padding:8px 10px;font-size:10px;background:transparent;border:none;color:var(--text);cursor:pointer;">Uncapped</button>
+              </div>
+            </div>
+            <div class="field-wrap" style="flex:1;position:relative;">
+              <label style="color:var(--text);font-size:9px;font-weight:700;text-transform:uppercase;">Scale Mode</label>
+              <button type="button" id="scaleSelectBtn" class="btn" style="justify-content:space-between;padding:0 10px;font-weight:500;text-transform:none;font-size:10px;background:rgba(0, 0, 0, 0.2);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;"><span id="scaleSelectLabel">Center Crop</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex:none;"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+              <div id="scaleOptList" style="display:none;position:absolute;top:100%;left:0;width:100%;margin-top:4px;background:rgba(0, 0, 0, 0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:12px;box-shadow:0 10px 20px rgba(0,0,0,.5);z-index:25;overflow:hidden;flex-direction:column;">
+                <button type="button" class="scale-opt" data-val="Center Crop" style="width:100%;text-align:left;padding:8px 10px;font-size:10px;background:transparent;border:none;color:var(--text);cursor:pointer;">Center Crop</button>
+                <button type="button" class="scale-opt" data-val="Fit" style="width:100%;text-align:left;padding:8px 10px;font-size:10px;background:transparent;border:none;color:var(--text);cursor:pointer;">Fit</button>
+                <button type="button" class="scale-opt" data-val="Stretch" style="width:100%;text-align:left;padding:8px 10px;font-size:10px;background:transparent;border:none;color:var(--text);cursor:pointer;">Stretch</button>
+              </div>
+            </div>
+          </div>
+
+        <div style="width:100%;height:1px;background:var(--dim);opacity:0.1;margin:4px 0;"></div>
+
+        <div class="toggle-wrap" style="background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;padding:10px 0;"><span class="toggle-label">Pause When Not In Use</span><div class="toggle active" id="obsToggle"></div></div>
+        <div style="display:flex;flex-direction:column;background:transparent;">
+          <div class="toggle-wrap" style="background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;padding:10px 0;"><span class="toggle-label">Battery Saver</span>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;"><span id="batPercentVal" style="font-size:9px;color:var(--dim);font-weight:700;">20%</span><div class="toggle active" id="batToggle" style="flex-shrink:0;"></div></div>
+          </div>
+          <div id="batSubmenu" style="display:flex;flex-direction:column;padding:0 0 10px;background:transparent;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:9px;color:var(--text);font-weight:700;text-transform:uppercase;">Trigger Below</span><span id="batSliderVal" style="font-size:9px;color:var(--dim);font-weight:700;">20%</span></div>
+            <input type="range" id="batSlider" min="5" max="50" value="20" style="width:100%;height:4px;background:var(--dim);border-radius:2px;outline:none;-webkit-appearance:none;appearance:none;accent-color:var(--text);">
+          </div>
+        </div>
+        <div class="toggle-wrap" style="background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;padding:10px 0;"><span class="toggle-label">Rotation</span><div class="toggle" id="gyroToggle"></div></div>
+        <div class="toggle-wrap" style="background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;padding:10px 0;"><span class="toggle-label">Touch Pass-through</span><div class="toggle active" id="touchToggle"></div></div>
+
+        <div style="position:relative;width:100%;margin-top:12px;">
+                  <button class="btn" id="purgeBtn" style="background:rgba(0, 0, 0, 0.15);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;color:var(--dim);margin-top:0;height:44px;border-radius:12px;">Clear Asset Cache</button>
+                  <div id="purgeConfirmPopup" style="display:none;position:absolute;bottom:115%;left:50%;transform:translateX(-50%);background:rgba(0, 0, 0, 0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:8px;border-radius:12px;box-shadow:0 10px 20px rgba(0,0,0,.5);z-index:20;flex-direction:column;gap:8px;min-width:120px;text-align:center;">
+                    <span style="font-size:10px;color:var(--text);font-weight:600;">Confirm clear cache?</span>
+                    <button id="purgeConfirmBtn" class="btn" style="background:rgba(255,80,80,.15);color:#ff5555;">Clear</button>
+                  </div>
+                </div>
+        <div class="status-row" id="configStatusRow" style="margin-top:4px;"></div>
+      </div>
+</div>
+
+<!-- HISTORY -->
+<div id="historyView" style="display:none;flex-direction:column;background:var(--ink);height:100%;padding:16px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-top:4px;">
+    <button id="backBtn" style="background:transparent;border:none;color:var(--accent);font-size:12px;cursor:pointer;font-weight:700;display:flex;align-items:center;gap:4px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back</button>
+    <div style="position:relative;display:flex;">
+      <button id="clearHistoryBtn" style="background:transparent;border:none;color:var(--dim);font-size:10px;cursor:pointer;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:4px 8px;border-radius:8px;"><span>Clear All</span></button>
+      <div id="clearHistoryPopup" style="display:none;position:absolute;top:115%;right:0;background:var(--panel);padding:8px;border-radius:12px;box-shadow:0 10px 20px rgba(0,0,0,.5),inset 0 0 0 1px var(--hair);z-index:20;flex-direction:column;gap:8px;min-width:100px;text-align:center;">
+        <span style="font-size:10px;color:var(--text);font-weight:600;">Confirm clear?</span>
+        <button id="clearHistoryConfirm" class="btn" style="background:rgba(255,80,80,.15);color:#ff5555;">Clear</button>
+      </div>
+    </div>
+  </div>
+  <div id="historyGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;overflow-y:auto;flex:1;align-content:start;padding-bottom:16px;"></div>
+</div>
+
+</div></div></div></div>
+
+<script>
+const A = window.Android || null;       // native bridge (null when opened in a normal browser)
+const $ = id => document.getElementById(id);
+const MUTED_ICON = '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>';
+const SOUND_ICON = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+
+function mUrl(u){ try{ if(A&&A.mediaUrl&&u&&u.indexOf('appassets.local/files/')>-1){ const m=A.mediaUrl(u); if(m) return m; } }catch(e){} return u; }
+const urlInput=$('urlInput'), applyBtn=$('applyBtn'), statusRow=$('statusRow');
+const miniFrame=$('miniFrame'), miniVideo=$('miniVideo'), miniLabel=$('miniLabel');
+const muteBtn=$('muteBtn'), muteIcon=$('muteIcon');
+const urlWrap=$('urlWrap'), fileWrap=$('fileWrap'), fileInput=$('fileInput'), fileNameDisplay=$('fileNameDisplay');
+const mainSettings=$('mainSettings'), historyView=$('historyView'), configView=$('configView'), historyGrid=$('historyGrid');
+const btnTypeWeb=$('btnTypeWeb'), btnTypeVideo=$('btnTypeVideo'), btnTypeHtml=$('btnTypeHtml');
+const scaleSelect={value:'Center Crop'}, fpsSelect={value:'Default'};
+const zoomInput=$('zoomInput'), zoomSlider=$('zoomSlider');
+
+let savedUrl='', savedType='web', currentType='web', currentZoom=1, historyList=[], urlDebounceTimer=null;
+
+window.nativeStatus=function(t){ statusRow.textContent=t||''; statusRow.className='status-row'; };
+function msg(el, text, ms=3000){ el.textContent=text; el.className='status-row ok'; setTimeout(()=>{ if(el.textContent===text) el.textContent=''; }, ms); }
+
+/* ---------- native settings sync ---------- */
+function on(id){ return $(id).classList.contains('active'); }
+function collect(){
+  return { fps:fpsSelect.value, scale:scaleSelect.value, zoom:currentZoom, pause:on('obsToggle'),
+           bat:on('batToggle'), batLevel:parseInt($('batSlider').value), gyro:on('gyroToggle'), touch:on('touchToggle') };
+}
+function push(){ if(A) A.saveSettings(JSON.stringify(collect())); }
+function restore(){
+  if(!A) return;
+  let s; try{ s=JSON.parse(A.getState()); }catch(e){ return; }
+  const set=(id,v)=>$(id).classList.toggle('active',!!v);
+  set('obsToggle',s.pause); set('batToggle',s.bat); set('gyroToggle',s.gyro); set('touchToggle',s.touch);
+  $('batSubmenu').style.display = s.bat ? 'flex':'none';
+  $('batSlider').value=s.batLevel; $('batSliderVal').textContent=s.batLevel+'%'; $('batPercentVal').textContent=s.batLevel+'%';
+  fpsSelect.value=s.fps; $('fpsSelectLabel').textContent=s.fps;
+  scaleSelect.value=s.scale; $('scaleSelectLabel').textContent=s.scale;
+  zoomInput.value=s.zoom; zoomSlider.value=Math.min(Math.max(s.zoom,0.25),1.25); applyZoom(s.zoom);
+}
+
+/* ---------- theme / config navigation ---------- */
+$('configBtn').addEventListener('click',()=>{ mainSettings.style.display='none'; configView.style.display='flex'; });$('configBackBtn').addEventListener('click',()=>{ configView.style.display='none'; mainSettings.style.display='flex'; });
+$('historyBtn').addEventListener('click',()=>{ mainSettings.style.display='none'; historyView.style.display='flex'; renderHistory(); });$('backBtn').addEventListener('click',()=>{ historyView.style.display='none'; mainSettings.style.display='flex'; });
+// called by native back button; returns true if a sub screen was closed
+window.nativeBack=function(){
+  if(configView.style.display==='flex'){ $('configBackBtn').click(); return true; }
+  if(historyView.style.display==='flex'){ $('backBtn').click(); return true; }
+  return false;
+};
+
+/* ---------- toggles ---------- */
+['obsToggle','batToggle','gyroToggle','touchToggle'].forEach(id=>{
+  const t=$(id); if(!t) return;
+  const wrap=t.closest('.toggle-wrap'); wrap.style.cursor='pointer';
+  wrap.addEventListener('click',()=>{
+    t.classList.toggle('active');
+    if(id==='batToggle') $('batSubmenu').style.display = t.classList.contains('active') ? 'flex':'none';
+    push();
+  });
+});
+$('batSlider').addEventListener('input',e=>{ const v=e.target.value; $('batSliderVal').textContent=v+'%'; $('batPercentVal').textContent=v+'%'; push(); });
+
+/* ---------- zoom ---------- */
+const DEV={w:Math.max(screen.width,1), h:Math.max(screen.height,1)};   // device screen in CSS px = what the wallpaper page is laid out in
+function layoutPreview(){
+  const wrap=$('miniWrap'); const avail=Math.max(window.innerWidth-40,100);
+  let h=Math.round(window.innerHeight*0.54), w=Math.round(h*DEV.w/DEV.h);
+  if(w>avail){ w=avail; h=Math.round(w*DEV.h/DEV.w); }
+  wrap.style.width=w+'px'; wrap.style.height=h+'px'; wrap.style.maxWidth='none';
+  applyZoom(currentZoom);
+}
+function applyZoom(val){
+  currentZoom=val;
+  const k=(parseFloat($('miniWrap').style.width)||DEV.w)/DEV.w;
+  // same maths as the wallpaper: page viewport = screen/zoom, then scaled by zoom -> identical layout to the real thing
+  miniFrame.style.width=(DEV.w/val)+'px'; miniFrame.style.height=(DEV.h/val)+'px';
+  miniFrame.style.transform='scale('+(val*k)+')'; miniFrame.style.transformOrigin='top left';
+  miniVideo.style.width='100%'; miniVideo.style.height='100%'; miniVideo.style.transform='none';
+}
+$('zoomBtn').addEventListener('click',e=>{ e.stopPropagation(); const p=$('zoomPopup'); p.style.display = p.style.display==='flex' ? 'none':'flex'; });
+zoomSlider.addEventListener('input',e=>{ const v=parseFloat(e.target.value); zoomInput.value=v; applyZoom(v); push(); });
+zoomInput.addEventListener('input',()=>{ const v=parseFloat(zoomInput.value); if(!isNaN(v)&&v>0){ zoomSlider.value=Math.min(Math.max(v,0.25),1.25); applyZoom(v); push(); } });
+
+/* ---------- custom drop menus ---------- */
+function bindMenu(btnId, listId, optClass, labelId, target){
+  const btn=$(btnId), list=$(listId);
+  btn.addEventListener('click',e=>{
+    e.stopPropagation();
+    const open=list.style.display!=='flex';
+    closeMenus(); list.style.display=open?'flex':'none';
+    if(open && target===scaleSelect) showScalePreview(scaleSelect.value, list);
+  });
+  document.querySelectorAll('.'+optClass).forEach(o=>o.addEventListener('click',e=>{
+    e.stopPropagation(); const v=o.getAttribute('data-val');
+    target.value=v; $(labelId).textContent=v; list.style.display='none'; hideScalePreview(); push();
+  }));
+}
+function closeMenus(){ $('fpsOptList').style.display='none'; $('scaleOptList').style.display='none'; hideScalePreview(); }
+bindMenu('fpsSelectBtn','fpsOptList','fps-opt','fpsSelectLabel',fpsSelect);
+bindMenu('scaleSelectBtn','scaleOptList','scale-opt','scaleSelectLabel',scaleSelect);
+
+// live preview of the scale mode next to the drop menu
+const sp=document.createElement('div');
+sp.style.cssText='display:none;position:absolute;z-index:30;background:var(--panel);padding:8px;border-radius:16px;box-shadow:0 10px 24px rgba(0,0,0,.5),inset 0 0 0 1px var(--hair);flex-direction:column;gap:6px;align-items:center;';
+sp.innerHTML='<div id="spLabel" style="font-size:9px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.05em;"></div><div id="spBox" style="width:80px;height:160px;background:#000;border-radius:12px;overflow:hidden;position:relative;"><video id="spVideo" muted loop autoplay playsinline style="width:100%;height:100%;display:none;"></video></div>';
+document.body.appendChild(sp);
+const spVideo=sp.querySelector('#spVideo');
+function showScalePreview(mode, list){
+  if(!savedUrl || savedType!=='video') return;
+  sp.querySelector('#spLabel').textContent=mode;
+  const vu=mUrl(savedUrl); if(spVideo.getAttribute('src')!==vu){ spVideo.src=vu; spVideo.muted=true; spVideo.loop=true; spVideo.play().catch(()=>{}); }
+  spVideo.style.display='block';
+  spVideo.style.objectFit = mode==='Stretch'?'fill':mode==='Fit'?'contain':'cover';
+  const r=list.getBoundingClientRect(); sp.style.left=r.left+'px'; sp.style.top=(r.bottom+6)+'px'; sp.style.display='flex';
+}
+function hideScalePreview(){ sp.style.display='none'; }
+document.querySelectorAll('.scale-opt').forEach(o=>o.addEventListener('touchstart',()=>{ showScalePreview(o.dataset.val,$('scaleOptList')); },{passive:true}));
+
+document.addEventListener('click',e=>{
+  if(!$('zoomPopup').contains(e.target) && e.target.closest('#zoomBtn')===null) $('zoomPopup').style.display='none';
+  if(!$('applyPopup').contains(e.target)) $('applyPopup').style.display='none';
+  if(!$('purgeConfirmPopup').contains(e.target)) $('purgeConfirmPopup').style.display='none';
+  if(!$('clearHistoryPopup').contains(e.target)) $('clearHistoryPopup').style.display='none';
+  if(!e.target.closest('#fpsOptList,#scaleOptList')) closeMenus();
+});
+
+/* ---------- type switch ---------- */
+function setType(t){
+  currentType=t;
+  btnTypeWeb.classList.toggle('active',t==='web'); btnTypeVideo.classList.toggle('active',t==='video'); btnTypeHtml.classList.toggle('active',t==='html');
+  urlWrap.style.display = t==='web' ? 'flex':'none';
+  fileWrap.style.display = t==='web' ? 'none':'block';
+  if(t!=='web'){
+      fileInput.accept = t==='video' ? 'video/*' : '.html,text/html';
+      fileInput.value='';
+      fileNameDisplay.textContent = t==='video' ? 'Upload Video':'Upload HTML';
+      fileNameDisplay.style.color='var(--text)';
+    }
+}
+btnTypeWeb.addEventListener('click',()=>setType('web'));
+btnTypeVideo.addEventListener('click',()=>setType('video'));
+btnTypeHtml.addEventListener('click',()=>setType('html'));
+
+/* native file picker copies the file into app storage and hands back a persistent URL */
+const origCOU=URL.createObjectURL.bind(URL);
+URL.createObjectURL=function(o){ if(window.__pendingNative){ const u=window.__pendingNative; window.__pendingNative=null; return u; } return origCOU(o); };
+
+fileInput.addEventListener('change',()=>{
+  if(fileInput.files.length>0){
+    fileNameDisplay.textContent=fileInput.files[0].name; fileNameDisplay.style.color='var(--text)'; saveAndPreview();
+  }
+});
+
+/* ---------- preview ---------- */
+/* ---- native preview: websites are shown in a real Android WebView laid over the preview box,
+        so sites that forbid <iframe> embedding (X-Frame-Options / CSP) still render ---- */
+const NATIVE_PREV = !!(A && A.previewLoad && A.previewLayout && A.previewHide);
+let prevActive=false, lastPrevKey='';
+function stopNativePreview(){ if(prevActive){ prevActive=false; lastPrevKey=''; try{ A.previewHide(); }catch(e){} } }
+function rectsHit(a,b){ return a.left<b.right && a.right>b.left && a.top<b.bottom && a.bottom>b.top; }
+function syncNativePreview(){
+  if(!prevActive) return;
+  const box=$('miniBox').getBoundingClientRect(), vis=$('mainSettings').getBoundingClientRect();
+  const l=Math.max(box.left,vis.left), t=Math.max(box.top,vis.top), r=Math.min(box.right,vis.right), b=Math.min(box.bottom,vis.bottom);
+  let show = box.width>0 && box.height>0 && vis.width>0 && r>l && b>t;
+  if(show){   // native view sits above the page, so step aside while a popup/menu overlaps it
+    const pops=[$('zoomPopup'),$('fpsOptList'),$('scaleOptList'),sp,$('clearHistoryPopup'),$('purgeConfirmPopup')];
+    for(const p of pops){ if(p && getComputedStyle(p).display!=='none' && rectsHit(p.getBoundingClientRect(),{left:l,top:t,right:r,bottom:b})){ show=false; break; } }
+  }
+  const o={show:show,l:box.left,t:box.top,w:box.width,h:box.height,vl:l,vt:t,vr:r,vb:b,zoom:currentZoom||1,dw:DEV.w,dh:DEV.h,rad:28};
+  const key=show?Object.values(o).map(v=>typeof v==='number'?Math.round(v*10):v).join(','):'hide';
+  if(key===lastPrevKey) return; lastPrevKey=key;
+  try{ A.previewLayout(JSON.stringify(show?o:{show:false})); }catch(e){}
+}
+(function prevLoop(){ syncNativePreview(); requestAnimationFrame(prevLoop); })();
+
+function showPreview(){
+  miniFrame.style.display='none'; miniVideo.style.display='none'; miniLabel.style.display='none';
+  miniFrame.src='about:blank'; miniVideo.removeAttribute('src');
+  if(NATIVE_PREV && savedType==='web'){ prevActive=true; lastPrevKey=''; try{ A.previewLoad(savedUrl); }catch(e){} syncNativePreview(); }
+  else if(savedType==='web'||savedType==='html'){ stopNativePreview(); miniFrame.src=savedUrl; miniFrame.style.display='block'; }
+  else {  stopNativePreview(); miniVideo.src=mUrl(savedUrl); miniVideo.style.display='block'; miniVideo.muted=true; miniVideo.loop=true; miniVideo.play().catch(()=>{}); }
+  muteIcon.innerHTML=MUTED_ICON; muteBtn.style.display='flex';
+  $('miniWebWarning').style.display = (savedType==='web' && !NATIVE_PREV) ? 'block' : 'none';
+  miniVideo.style.objectFit = scaleSelect.value==='Stretch'?'fill':scaleSelect.value==='Fit'?'contain':'cover';
+}
+muteBtn.addEventListener('click',e=>{
+  e.stopPropagation();
+  if(miniVideo.style.display==='block'){ miniVideo.muted=!miniVideo.muted; muteIcon.innerHTML=miniVideo.muted?MUTED_ICON:SOUND_ICON; }
+});
+
+function saveAndPreview(){
+  if(currentType==='web'){
+    let val=urlInput.value.trim();
+    if(!val){ statusRow.textContent='Enter a URL first'; statusRow.className='status-row'; return; }
+    val=val.replace(/^(https?:\/\/)+/i,'https://');
+    if(!/^https?:\/\//i.test(val)) val='https://'+val;
+    urlInput.value=val; savedUrl=val;
+  } else {
+    const file=fileInput.files[0];
+    if(!file){ statusRow.textContent='Select a '+currentType+' file first'; statusRow.className='status-row'; return; }
+    savedUrl=URL.createObjectURL(file);
+  }
+  savedType=currentType;
+  showPreview();   // preview only - nothing is stored in history until the wallpaper is applied
+  applyBtn.disabled=false; msg(statusRow,'Preview ready');
+}
+urlInput.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); clearTimeout(urlDebounceTimer); saveAndPreview(); } });
+$('urlGoBtn').addEventListener('click',()=>{ clearTimeout(urlDebounceTimer); saveAndPreview(); });
+urlInput.addEventListener('input',()=>{
+  const val=urlInput.value.trim();
+  $('urlGoBtn').style.display=val.length>0?'flex':'none';
+  clearTimeout(urlDebounceTimer);
+  if(currentType==='web' && /^(https?:\/\/)?[^\s\/]+\.[a-z]{2,}(\/\S*)?$/i.test(val)){
+    urlDebounceTimer=setTimeout(()=>{ saveAndPreview(); }, 1000);
+  }
+});
+
+/* ---------- apply ---------- */
+applyBtn.addEventListener('click',e=>{
+  if(!savedUrl) return; e.stopPropagation();
+  const p=$('applyPopup'); p.style.display = p.style.display==='flex' ? 'none':'flex';
+});
+document.querySelectorAll('.apply-opt').forEach(b=>b.addEventListener('click',e=>{
+  e.stopPropagation(); $('applyPopup').style.display='none';
+  const target=b.getAttribute('data-val');
+  if(!A){ addToHistory(savedType,savedUrl); msg(statusRow,'Applied (browser preview only)'); return; }
+  const res=A.applyWallpaper(savedType,savedUrl,target,JSON.stringify(collect()));
+  addToHistory(savedType,savedUrl);
+  msg(statusRow, res, 4000);
+}));
+const HIST_MAX=12;
+function dropFile(item){ try{ if(A && A.deleteFile && item.type!=='web') A.deleteFile(item.url); }catch(e){} }
+function addToHistory(type,url){
+  if(!url) return;
+  historyList=historyList.filter(i=>i.url!==url);
+  historyList.push({type:type,url:url,id:Date.now()});
+  while(historyList.length>HIST_MAX){ dropFile(historyList.shift()); }
+  renderHistory();
+}
+
+/* ---------- history ---------- */
+function loadFromHistory(item){
+  savedUrl=item.url; savedType=item.type; setType(item.type);
+  if(item.type==='web') urlInput.value=savedUrl; else { fileNameDisplay.textContent='Loaded from History'; fileNameDisplay.style.color='var(--text)'; }
+  showPreview(); applyBtn.disabled=false; msg(statusRow,'Loaded from history'); $('backBtn').click();
+}
+function renderHistory(){
+  historyGrid.innerHTML='';
+  if(historyView.style.display!=='flex'){ try{ localStorage.setItem('hist',JSON.stringify(historyList)); }catch(e){} return; }   // nothing loads until History is opened
+  historyList.forEach(item=>{
+    const el=document.createElement('div'); el.className='history-item'; el.onclick=()=>loadFromHistory(item);
+    if(item.type==='video'){ const v=document.createElement('video'); v.preload='metadata'; v.muted=true; v.playsInline=true; v.src=mUrl(item.url)+'#t=0.1'; el.appendChild(v); }
+    else if(NATIVE_PREV && item.type==='web'){ const d=document.createElement('div'); let h=item.url; try{ h=new URL(item.url).hostname.replace(/^www\./,''); }catch(e){} d.textContent=h; d.style.cssText='position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:8px;text-align:center;font-size:10px;font-weight:700;word-break:break-all;color:var(--text);'; el.appendChild(d); }
+    else { const f=document.createElement('iframe'); f.src=item.url; f.sandbox='allow-scripts allow-same-origin'; el.appendChild(f); }
+    const tag=document.createElement('div'); tag.className='history-type'; tag.textContent=item.type; el.appendChild(tag);
+    const del=document.createElement('button'); del.type='button'; del.textContent='×';
+    del.style.cssText='position:absolute;top:4px;right:4px;width:16px;height:16px;padding:0;border:none;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:10px;line-height:16px;text-align:center;cursor:pointer;z-index:3;';
+    del.addEventListener('click',e=>{ e.stopPropagation(); dropFile(item); historyList=historyList.filter(h=>h.id!==item.id); renderHistory(); });
+    el.appendChild(del); historyGrid.appendChild(el);
+  });
+  try{ localStorage.setItem('hist',JSON.stringify(historyList)); }catch(e){}
+}
+$('clearHistoryBtn').addEventListener('click',e=>{ e.stopPropagation(); if(!historyList.length) return; const p=$('clearHistoryPopup'); p.style.display=p.style.display==='flex'?'none':'flex'; });
+$('clearHistoryConfirm').addEventListener('click',e=>{ e.stopPropagation(); historyList.forEach(dropFile); historyList=[]; renderHistory(); $('clearHistoryPopup').style.display='none'; });
+
+/* ---------- cache ---------- */
+$('purgeBtn').addEventListener('click',e=>{ e.stopPropagation(); const p=$('purgeConfirmPopup'); p.style.display=p.style.display==='flex'?'none':'flex'; });
+$('purgeConfirmBtn').addEventListener('click',e=>{
+  e.stopPropagation(); if(A) A.clearCache(); historyList=[]; renderHistory();
+  msg($('configStatusRow'),'Cache Purged Successfully'); $('purgeConfirmPopup').style.display='none';
+});
+
+/* ---------- boot ---------- */
+if(A) A.setTheme(true);   // dark only
+try{ historyList=JSON.parse(localStorage.getItem('hist')||'[]').filter(x=>x&&x.url&&!x.url.startsWith('blob:')); if(historyList.length>HIST_MAX){ historyList.slice(0,-HIST_MAX).forEach(dropFile); historyList=historyList.slice(-HIST_MAX); } renderHistory(); }catch(e){}
+layoutPreview(); window.addEventListener('resize',layoutPreview);
+restore();
+(function(){ const b=document.getElementById('spBox'); if(b) b.style.height=Math.round(80*DEV.h/DEV.w)+'px'; })();
+</script>
+</body>
+</html>
